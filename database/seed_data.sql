@@ -1,12 +1,6 @@
 -- ANNI BOT
 USE anni_db;
 
---USUARIOS
-INSERT INTO usuarios (cedula, nombre, password, rol, estado) VALUES
-('1234567890', 'adminuser', '1234', 'ADMIN','ACTIVO'),
-('0987654321', 'docenteuser', '1234', 'DOCENTE','ACTIVO'),
-('1122334455', 'estudianteuser', '1234', 'ESTUDIANTE','ACTIVO');
-
 -- CARRERAS
 INSERT INTO carreras (nombre) VALUES
 ('Desarrollo de Software'),
