@@ -1,24 +1,14 @@
-const { Markup } = require('telegraf');
-
-const welcomeMessage = require('../messages/welcomeMessage');
-
 module.exports = (bot) => {
+    bot.start(async (ctx) => {
 
-  bot.start((ctx) => {
+        ctx.session = {};
+        ctx.session.loginStep = 'cedula';
 
-    ctx.reply(
+        await ctx.reply(
+            '🤖 Bienvenido a ANNI\n\n' +
+            'Asistente Virtual Institucional del INAN.\n\n' +
+            '🔐 Por favor ingresa tu número de cédula:'
+        );
 
-      welcomeMessage,
-
-      Markup.inlineKeyboard([
-        [Markup.button.callback('📅 Horarios', 'horarios')],
-        [Markup.button.callback('🗓 Calendario', 'calendario')],
-        [Markup.button.callback('❓ FAQ', 'faq')],
-        [Markup.button.callback('📞 Contactos', 'contactos')]
-      ])
-
-    );
-
-  });
-
+    });
 };
