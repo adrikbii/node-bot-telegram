@@ -114,14 +114,22 @@ module.exports = (bot) => {
     });
 
     bot.action('logout', async (ctx) => {
-        await ctx.answerCbQuery();
+        try {
+            await ctx.answerCbQuery();
 
-        ctx.session = {};
+            ctx.session = {};
 
-        return ctx.reply(
-            '🚪 Sesión cerrada correctamente.\n\nUsa /start para iniciar sesión nuevamente.'
-        );
+            return ctx.reply(
+                '🚪 Sesión cerrada correctamente.\n\nUsa /start para iniciar sesión nuevamente.'
+            );
+
+        } catch (error) {
+            console.error(error);
+
+            return ctx.reply('❌ Error al cerrar sesión.');
+        }
     });
+
 
     bot.action('admin_usuarios', async (ctx) => {
         await ctx.answerCbQuery();

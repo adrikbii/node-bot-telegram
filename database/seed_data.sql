@@ -271,3 +271,21 @@ VALUES
 (7,
 'Malla Curricular - Administración Virtual',
 'https://tecnologicoinan.edu.ec/proyecto/imagenes/mallaadmvirt.jpg');
+
+-- HORARIOS IMG
+INSERT IGNORE INTO horarios_imagenes
+(carrera_id, titulo, url_imagen)
+VALUES
+(
+1,
+'Horario - Desarrollo de Software',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/horariodessofware.jpg'
+);
+
+INSERT IGNORE INTO calendario_academico
+(titulo, url_archivo)
+VALUES
+(
+'Calendario Académico INAN',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/calendarioacademico.jpg'
+);

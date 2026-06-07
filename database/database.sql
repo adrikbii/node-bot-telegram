@@ -139,6 +139,30 @@ CREATE TABLE mallas_curriculares (
     REFERENCES carreras(id)
 );
 
+CREATE TABLE horarios_imagenes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    carrera_id INT NOT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    url_imagen TEXT NOT NULL,
+    estado ENUM('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY uk_horario_carrera (carrera_id),
+
+    FOREIGN KEY (carrera_id)
+    REFERENCES carreras(id)
+);
+
+DROP TABLE IF EXISTS calendario_academico;
+
+CREATE TABLE calendario_academico (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    url_archivo TEXT NOT NULL,
+    estado ENUM('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 ALTER TABLE usuarios
 ADD UNIQUE (cedula);
 
