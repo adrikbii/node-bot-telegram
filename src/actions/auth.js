@@ -1,53 +1,42 @@
 const pool = require('../config/database');
 const { Markup } = require('telegraf');
 
-function menuEstudiante() {
+function menuAdmin() {
     return Markup.inlineKeyboard([
-        [Markup.button.callback('📅 Horarios', 'horarios')],
-        [Markup.button.callback('🗓 Calendario', 'calendario')],
-        [Markup.button.callback('📚 Malla Curricular', 'malla')],
+        [Markup.button.callback('👥 Gestionar Usuarios', 'admin_usuarios')],
+        [Markup.button.callback('📚 Gestionar Mallas', 'admin_mallas')],
+        [Markup.button.callback('❓ Gestionar FAQ', 'admin_faq')],
         [Markup.button.callback('🏫 Información Institucional', 'institucion')],
-        [Markup.button.callback('❓ Preguntas Frecuentes', 'faq')],
-        [Markup.button.callback('📞 Contactos', 'contactos')],
         [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
     ]);
 }
 
 function menuDocente() {
     return Markup.inlineKeyboard([
+        [Markup.button.callback('📅 Mis Horarios', 'horarios')],
+        [Markup.button.callback('📚 Malla Curricular', 'malla')],
+        [Markup.button.callback('📞 Contactos', 'contactos')],
+        [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
+    ]);
+}
+
+function menuEstudiante() {
+    return Markup.inlineKeyboard([
         [Markup.button.callback('📅 Horarios', 'horarios')],
         [Markup.button.callback('🗓 Calendario', 'calendario')],
-        [Markup.button.callback('📚 Malla Curricular', 'malla')],
-        [Markup.button.callback('🏫 Información Institucional', 'institucion')],
+        [Markup.button.callback('📚 Mi Malla Curricular', 'malla')],
         [Markup.button.callback('❓ Preguntas Frecuentes', 'faq')],
         [Markup.button.callback('📞 Contactos', 'contactos')],
         [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
     ]);
 }
 
-function menuAdmin() {
-    return Markup.inlineKeyboard([
-        [Markup.button.callback('👥 Usuarios', 'admin_usuarios')],
-        [Markup.button.callback('📚 Carreras y Materias', 'admin_academico')],
-        [Markup.button.callback('❓ FAQ', 'faq')],
-        [Markup.button.callback('🏫 Información Institucional', 'institucion')],
-        [Markup.button.callback('📞 Contactos', 'contactos')],
-        [Markup.button.callback('📊 Estadísticas', 'admin_estadisticas')],
-        [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
-    ]);
-}
-
 function obtenerMenuPorRol(rol) {
-    if (rol === 'ADMIN') {
-        return menuAdmin();
-    }
-
-    if (rol === 'DOCENTE') {
-        return menuDocente();
-    }
-
+    if (rol === 'ADMIN') return menuAdmin();
+    if (rol === 'DOCENTE') return menuDocente();
     return menuEstudiante();
 }
+
 
 module.exports = (bot) => {
 
@@ -79,10 +68,10 @@ module.exports = (bot) => {
                         u.id,
                         u.nombre,
                         u.cedula,
+                        u.carrera_id,
                         r.nombre AS rol
                     FROM usuarios u
-                    INNER JOIN roles r
-                        ON u.rol_id = r.id
+                    INNER JOIN roles r ON u.rol_id = r.id
                     WHERE u.cedula = ?
                     AND u.password = ?
                     AND u.estado = 'ACTIVO'
@@ -101,17 +90,18 @@ module.exports = (bot) => {
                 const usuario = usuarios[0];
 
                 ctx.session.usuario = {
-                    id: usuario.id,
-                    nombre: usuario.nombre,
-                    rol: usuario.rol
-                };
+                id: usuario.id,
+                nombre: usuario.nombre,
+                rol: usuario.rol,
+                carrera_id: usuario.carrera_id
+            };
 
-                ctx.session.loginStep = null;
+            ctx.session.loginStep = null;
 
-                return ctx.reply(
-                    `✅ Bienvenido ${usuario.nombre}\n\nRol: ${usuario.rol}\n\nSeleccione una opción:`,
-                    obtenerMenuPorRol(usuario.rol)
-                );
+            return ctx.reply(
+                `✅ Bienvenido ${usuario.nombre}\n\nRol: ${usuario.rol}\n\nSeleccione una opción:`,
+                obtenerMenuPorRol(usuario.rol)
+            );
             }
 
         } catch (error) {

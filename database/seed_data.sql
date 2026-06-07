@@ -244,3 +244,36 @@ INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (7, 4, 'Análisis Financiero'),
 (7, 4, 'E-Commerce'),
 (7, 4, 'Trabajo de Titulación');
+
+-- MALLAS CURRICULARES iIMG
+INSERT IGNORE INTO mallas_curriculares
+(carrera_id, titulo, url_imagen)
+VALUES
+
+(1,
+'Malla Curricular - Desarrollo de Software',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/malladessofware.jpg'),
+
+(2,
+'Malla Curricular - Marketing Digital y Comercio Electrónico',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/mallamarketing.jpg'),
+
+(3,
+'Malla Curricular - Contabilidad y Asesoría Tributaria',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/mallacontasetrib.jpg'),
+
+(4,
+'Malla Curricular - Enfermería',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/mallaenfermeria.jpg'),
+
+(5,
+'Malla Curricular - Administración Presencial',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/mallaadmpres.jpg'),
+
+(6,
+'Malla Curricular - Administración Híbrida',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/mallaadminhibr.jpg'),
+
+(7,
+'Malla Curricular - Administración Virtual',
+'https://tecnologicoinan.edu.ec/proyecto/imagenes/mallaadmvirt.jpg');
