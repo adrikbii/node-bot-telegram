@@ -1,8 +1,14 @@
 -- ANNI BOT
 USE anni_db;
 
+-- USUARIOS
+INSERT IGNORE INTO usuarios (cedula, nombre, password, rol) VALUES
+('1234567890', 'Adminuser', 'admin123', 'ADMIN'),
+('0987654321', 'Docenteuser', 'docente123', 'DOCENTE'),
+('1122334455', 'Estudianteuser', 'estudiante123', 'ESTUDIANTE');
+
 -- CARRERAS
-INSERT INTO carreras (nombre) VALUES
+INSERT IGNORE INTO carreras (nombre) VALUES
 ('Desarrollo de Software'),
 ('Marketing Digital y Comercio Electrónico'),
 ('Contabilidad y Asesoría Tributaria'),
@@ -12,7 +18,7 @@ INSERT INTO carreras (nombre) VALUES
 ('Administración Virtual');
 
 -- CICLOS
-INSERT INTO ciclos (nombre) VALUES
+INSERT IGNORE INTO ciclos (nombre) VALUES
 ('1er Ciclo'),
 ('2do Ciclo'),
 ('3er Ciclo'),
@@ -20,7 +26,7 @@ INSERT INTO ciclos (nombre) VALUES
 
 -- DESARROLLO DE SOFTWARE
 -- carrera_id = 1
-INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
+INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (1, 1, 'Programación 1'),
 (1, 1, 'Lógica Informática'),
 (1, 1, 'Sistemas Operativos 1'),
@@ -51,7 +57,7 @@ INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
 
 -- MARKETING DIGITAL Y COMERCIO ELECTRÓNICO
 -- carrera_id = 2
-INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
+INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (2, 1, 'Gestión Administrativa'),
 (2, 1, 'Contabilidad'),
 (2, 1, 'Marketing'),
@@ -82,7 +88,7 @@ INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
 
 -- CONTABILIDAD Y ASESORÍA TRIBUTARIA
 -- carrera_id = 3
-INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
+INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (3, 1, 'Gestión Administrativa'),
 (3, 1, 'Contabilidad'),
 (3, 1, 'Tributación 1'),
@@ -113,7 +119,7 @@ INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
 
 -- ENFERMERÍA
 -- carrera_id = 4
-INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
+INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (4, 1, 'Fundamentos y Técnicas Básicas de Enfermería'),
 (4, 1, 'Morfofisiología'),
 (4, 1, 'Psicología y Salud Mental'),
@@ -140,7 +146,7 @@ INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
 
 -- ADMINISTRACIÓN PRESENCIAL
 -- carrera_id = 5
-INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
+INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (5, 1, 'Gestión Administrativa'),
 (5, 1, 'Contabilidad'),
 (5, 1, 'Marketing'),
@@ -171,7 +177,7 @@ INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
 
 -- ADMINISTRACIÓN HÍBRIDA
 -- carrera_id = 6
-INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
+INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (6, 1, 'Gestión Administrativa'),
 (6, 1, 'Contabilidad'),
 (6, 1, 'Marketing'),
@@ -202,7 +208,7 @@ INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
 
 -- ADMINISTRACIÓN VIRTUAL
 -- carrera_id = 7
-INSERT INTO materias (carrera_id, ciclo_id, nombre) VALUES
+INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (7, 1, 'Fundamentos de Administración'),
 (7, 1, 'Contabilidad'),
 (7, 1, 'Ventas'),

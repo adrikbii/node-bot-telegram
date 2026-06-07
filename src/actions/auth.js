@@ -1,6 +1,54 @@
 const pool = require('../config/database');
 const { Markup } = require('telegraf');
 
+function menuEstudiante() {
+    return Markup.inlineKeyboard([
+        [Markup.button.callback('📅 Horarios', 'horarios')],
+        [Markup.button.callback('🗓 Calendario', 'calendario')],
+        [Markup.button.callback('📚 Malla Curricular', 'malla')],
+        [Markup.button.callback('🏫 Información Institucional', 'institucion')],
+        [Markup.button.callback('❓ Preguntas Frecuentes', 'faq')],
+        [Markup.button.callback('📞 Contactos', 'contactos')],
+        [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
+    ]);
+}
+
+function menuDocente() {
+    return Markup.inlineKeyboard([
+        [Markup.button.callback('📅 Horarios', 'horarios')],
+        [Markup.button.callback('🗓 Calendario', 'calendario')],
+        [Markup.button.callback('📚 Malla Curricular', 'malla')],
+        [Markup.button.callback('🏫 Información Institucional', 'institucion')],
+        [Markup.button.callback('❓ Preguntas Frecuentes', 'faq')],
+        [Markup.button.callback('📞 Contactos', 'contactos')],
+        [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
+    ]);
+}
+
+function menuAdmin() {
+    return Markup.inlineKeyboard([
+        [Markup.button.callback('👥 Usuarios', 'admin_usuarios')],
+        [Markup.button.callback('📚 Carreras y Materias', 'admin_academico')],
+        [Markup.button.callback('❓ FAQ', 'faq')],
+        [Markup.button.callback('🏫 Información Institucional', 'institucion')],
+        [Markup.button.callback('📞 Contactos', 'contactos')],
+        [Markup.button.callback('📊 Estadísticas', 'admin_estadisticas')],
+        [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
+    ]);
+}
+
+function obtenerMenuPorRol(rol) {
+    if (rol === 'ADMIN') {
+        return menuAdmin();
+    }
+
+    if (rol === 'DOCENTE') {
+        return menuDocente();
+    }
+
+    return menuEstudiante();
+}
+
 module.exports = (bot) => {
 
     bot.on('text', async (ctx) => {
@@ -13,18 +61,14 @@ module.exports = (bot) => {
 
             const texto = ctx.message.text.trim();
 
-            // Paso 1: Cédula
             if (ctx.session.loginStep === 'cedula') {
 
                 ctx.session.cedula = texto;
                 ctx.session.loginStep = 'password';
 
-                return ctx.reply(
-                    '🔐 Ahora ingresa tu contraseña:'
-                );
+                return ctx.reply('🔐 Ahora ingresa tu contraseña:');
             }
 
-            // Paso 2: Contraseña
             if (ctx.session.loginStep === 'password') {
 
                 const password = texto;
@@ -41,7 +85,6 @@ module.exports = (bot) => {
                 );
 
                 if (usuarios.length === 0) {
-
                     ctx.session = {};
 
                     return ctx.reply(
@@ -60,40 +103,58 @@ module.exports = (bot) => {
                 ctx.session.loginStep = null;
 
                 return ctx.reply(
-                    `✅ Bienvenido ${usuario.nombre}\n\nRol: ${usuario.rol}`,
-                    Markup.inlineKeyboard([
-                        [
-                            Markup.button.callback('📅 Horarios', 'horarios')
-                        ],
-                        [
-                            Markup.button.callback('🗓 Calendario', 'calendario')
-                        ],
-                        [
-                            Markup.button.callback('📚 Malla Curricular', 'malla')
-                        ],
-                        [
-                            Markup.button.callback('🏫 Información Institucional', 'institucion')
-                        ],
-                        [
-                            Markup.button.callback('❓ Preguntas Frecuentes', 'faq')
-                        ],
-                        [
-                            Markup.button.callback('📞 Contactos', 'contactos')
-                        ]
-                    ])
+                    `✅ Bienvenido ${usuario.nombre}\n\nRol: ${usuario.rol}\n\nSeleccione una opción:`,
+                    obtenerMenuPorRol(usuario.rol)
                 );
-
             }
 
         } catch (error) {
 
             console.error(error);
 
-            return ctx.reply(
-                '❌ Error durante el inicio de sesión.'
-            );
+            return ctx.reply('❌ Error durante el inicio de sesión.');
         }
 
+    });
+
+    bot.action('logout', async (ctx) => {
+        await ctx.answerCbQuery();
+
+        ctx.session = {};
+
+        return ctx.reply(
+            '🚪 Sesión cerrada correctamente.\n\nUsa /start para iniciar sesión nuevamente.'
+        );
+    });
+
+    bot.action('admin_usuarios', async (ctx) => {
+        await ctx.answerCbQuery();
+
+        if (!ctx.session.usuario || ctx.session.usuario.rol !== 'ADMIN') {
+            return ctx.reply('❌ No tienes permiso para acceder a esta opción.');
+        }
+
+        return ctx.reply('👥 Módulo de usuarios pendiente de implementación.');
+    });
+
+    bot.action('admin_academico', async (ctx) => {
+        await ctx.answerCbQuery();
+
+        if (!ctx.session.usuario || ctx.session.usuario.rol !== 'ADMIN') {
+            return ctx.reply('❌ No tienes permiso para acceder a esta opción.');
+        }
+
+        return ctx.reply('📚 Módulo académico pendiente de implementación.');
+    });
+
+    bot.action('admin_estadisticas', async (ctx) => {
+        await ctx.answerCbQuery();
+
+        if (!ctx.session.usuario || ctx.session.usuario.rol !== 'ADMIN') {
+            return ctx.reply('❌ No tienes permiso para acceder a esta opción.');
+        }
+
+        return ctx.reply('📊 Módulo de estadísticas pendiente de implementación.');
     });
 
 };
