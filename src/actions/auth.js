@@ -75,11 +75,17 @@ module.exports = (bot) => {
 
                 const [usuarios] = await pool.query(
                     `
-                    SELECT *
-                    FROM usuarios
-                    WHERE cedula = ?
-                    AND password = ?
-                    AND estado = 'ACTIVO'
+                    SELECT
+                        u.id,
+                        u.nombre,
+                        u.cedula,
+                        r.nombre AS rol
+                    FROM usuarios u
+                    INNER JOIN roles r
+                        ON u.rol_id = r.id
+                    WHERE u.cedula = ?
+                    AND u.password = ?
+                    AND u.estado = 'ACTIVO'
                     `,
                     [ctx.session.cedula, password]
                 );

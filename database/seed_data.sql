@@ -2,30 +2,38 @@
 USE anni_db;
 
 -- USUARIOS
-INSERT IGNORE INTO usuarios (cedula, nombre, password, rol) VALUES
-('1234567890', 'Adminuser', 'admin123', 'ADMIN'),
-('0987654321', 'Docenteuser', 'docente123', 'DOCENTE'),
-('1122334455', 'Estudianteuser', 'estudiante123', 'ESTUDIANTE');
+INSERT IGNORE INTO usuarios
+(cedula, nombre, password, rol_id, estado, carrera_id)
+VALUES
+('1234567890', 'Adminuser', 'admin123', 1, 'ACTIVO', NULL),
+('0987654321', 'Docenteuser', 'docente123', 2, 'ACTIVO', NULL),
+('1122334455', 'Estudianteuser', 'estudiante123', 3, 'ACTIVO', 1);
+
+-- ROLES
+INSERT IGNORE INTO roles (nombre)
+VALUES
+('ADMIN'),
+('DOCENTE'),
+('ESTUDIANTE');
 
 -- CARRERAS
-INSERT IGNORE INTO carreras (nombre) VALUES
-('Desarrollo de Software'),
-('Marketing Digital y Comercio Electrónico'),
-('Contabilidad y Asesoría Tributaria'),
-('Enfermería'),
-('Administración Presencial'),
-('Administración Híbrida'),
-('Administración Virtual');
+INSERT IGNORE INTO carreras (id, nombre) VALUES
+(1, 'Desarrollo de Software'),
+(2, 'Marketing Digital y Comercio Electrónico'),
+(3, 'Contabilidad y Asesoría Tributaria'),
+(4, 'Enfermería'),
+(5, 'Administración Presencial'),
+(6, 'Administración Híbrida'),
+(7, 'Administración Virtual');
 
 -- CICLOS
-INSERT IGNORE INTO ciclos (nombre) VALUES
-('1er Ciclo'),
-('2do Ciclo'),
-('3er Ciclo'),
-('4to Ciclo');
+INSERT IGNORE INTO ciclos (id, nombre) VALUES
+(1, '1er Ciclo'),
+(2, '2do Ciclo'),
+(3, '3er Ciclo'),
+(4, '4to Ciclo');
 
 -- DESARROLLO DE SOFTWARE
--- carrera_id = 1
 INSERT IGNORE INTO materias (carrera_id, ciclo_id, nombre) VALUES
 (1, 1, 'Programación 1'),
 (1, 1, 'Lógica Informática'),

@@ -10,9 +10,20 @@ CREATE TABLE usuarios (
     cedula VARCHAR(10),
     nombre VARCHAR(100),
     password VARCHAR(255),
-    rol ENUM('ESTUDIANTE','DOCENTE','ADMIN') NOT NULL,
+    rol_id INT NOT NULL,
+    carrera_id INT,
     estado ENUM('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+
+    FOREIGN KEY (rol_id)
+        REFERENCES roles(id),
+    FOREIGN KEY (carrera_id)
+        REFERENCES carreras(id)
+);
+
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- TABLA CARRERAS
@@ -41,6 +52,8 @@ CREATE TABLE materias (
 
     FOREIGN KEY (ciclo_id)
         REFERENCES ciclos(id)
+
+    UNIQUE (carrera_id, ciclo_id, nombre)
 );
 
 -- TABLA HORARIOS
