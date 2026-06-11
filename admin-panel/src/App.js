@@ -390,7 +390,7 @@ function App() {
 
       <hr />
 
-      <h3>{contactoEditandoId ? "Editar Contacto" : "Nuevo Contacto"}</h3>
+      <h2>{contactoEditandoId ? "Editar Contacto" : "Nuevo Contacto"}</h2>
 
       <form onSubmit={guardarContacto}>
         <input
@@ -439,7 +439,7 @@ function App() {
         </button>
       </form>
 
-      <br />
+      <hr />
 
       <h2>Contactos</h2>
 
