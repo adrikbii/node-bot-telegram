@@ -15,6 +15,7 @@ function menuDocente() {
     return Markup.inlineKeyboard([
         [Markup.button.callback('📅 Mis Horarios', 'horarios')],
         [Markup.button.callback('📚 Malla Curricular', 'malla')],
+        [Markup.button.callback('🏫 Información Institucional', 'institucion')],
         [Markup.button.callback('📞 Contactos', 'contactos')],
         [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
     ]);
@@ -26,6 +27,7 @@ function menuEstudiante() {
         [Markup.button.callback('🗓 Calendario', 'calendario')],
         [Markup.button.callback('📚 Mi Malla Curricular', 'malla')],
         [Markup.button.callback('❓ Preguntas Frecuentes', 'faq')],
+        [Markup.button.callback('🏫 Información Institucional', 'institucion')],
         [Markup.button.callback('📞 Contactos', 'contactos')],
         [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
     ]);

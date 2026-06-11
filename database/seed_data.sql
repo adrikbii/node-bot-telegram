@@ -289,3 +289,22 @@ VALUES
 'Calendario Académico INAN',
 'https://tecnologicoinan.edu.ec/proyecto/imagenes/calendarioacademico.jpg'
 );
+
+INSERT INTO informacion_institucional
+(titulo, contenido)
+VALUES
+
+(
+'Misión',
+'Formar profesionales con sólidos conocimientos técnicos y valores éticos.'
+),
+
+(
+'Visión',
+'Ser una institución reconocida por su excelencia académica e innovación.'
+),
+
+(
+'Información General',
+'El Instituto INAN ofrece carreras tecnológicas orientadas al desarrollo profesional.'
+);
