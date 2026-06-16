@@ -7,6 +7,8 @@ function App() {
   const [contactos, setContactos] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [carreras, setCarreras] = useState([]);
+  const [docentes, setDocentes] = useState([]);
+  const [horariosDocentes, setHorariosDocentes] = useState([]);
 
   const [pregunta, setPregunta] = useState("");
   const [respuesta, setRespuesta] = useState("");
@@ -29,12 +31,19 @@ function App() {
   const [horarioUrl, setHorarioUrl] = useState("");
   const [horarioEditandoId, setHorarioEditandoId] = useState(null);
 
+  const [docenteId, setDocenteId] = useState("");
+  const [horarioDocenteTitulo, setHorarioDocenteTitulo] = useState("");
+  const [horarioDocenteUrl, setHorarioDocenteUrl] = useState("");
+  const [horarioDocenteEditandoId, setHorarioDocenteEditandoId] = useState(null);
+
   useEffect(() => {
     cargarFaqs();
     cargarInformacion();
     cargarContactos();
     cargarHorarios();
     cargarCarreras();
+    cargarDocentes();
+    cargarHorariosDocentes();
   }, []);
 
   const cargarFaqs = async () => {
@@ -81,6 +90,24 @@ function App() {
     try {
       const respuesta = await axios.get("http://localhost:3001/api/carreras");
       setCarreras(respuesta.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const cargarDocentes = async () => {
+    try {
+      const respuesta = await axios.get("http://localhost:3001/api/docentes");
+      setDocentes(respuesta.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const cargarHorariosDocentes = async () => {
+    try {
+      const respuesta = await axios.get("http://localhost:3001/api/horarios-docentes");
+      setHorariosDocentes(respuesta.data);
     } catch (error) {
       console.error(error);
     }
@@ -218,6 +245,38 @@ function App() {
     }
   };
 
+  const guardarHorarioDocente = async (e) => {
+    e.preventDefault();
+
+    const datos = {
+      usuario_id: docenteId,
+      titulo: horarioDocenteTitulo,
+      url_imagen: horarioDocenteUrl,
+      estado: "ACTIVO",
+    };
+
+    try {
+      if (horarioDocenteEditandoId) {
+        await axios.put(
+          `http://localhost:3001/api/horarios-docentes/${horarioDocenteEditandoId}`,
+          datos
+        );
+      } else {
+        await axios.post("http://localhost:3001/api/horarios-docentes", datos);
+      }
+
+      setDocenteId("");
+      setHorarioDocenteTitulo("");
+      setHorarioDocenteUrl("");
+      setHorarioDocenteEditandoId(null);
+
+      cargarHorariosDocentes();
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar horario docente");
+    }
+  };
+
   const eliminarFaq = async (id) => {
 
     const confirmar = window.confirm(
@@ -294,6 +353,19 @@ function App() {
 
   };
 
+  const eliminarHorarioDocente = async (id) => {
+    const confirmar = window.confirm("¿Desea eliminar este horario docente?");
+    if (!confirmar) return;
+
+    try {
+      await axios.delete(`http://localhost:3001/api/horarios-docentes/${id}`);
+      cargarHorariosDocentes();
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar horario docente");
+    }
+  };
+
   const editarFaq = (faq) => {
     setEditandoId(faq.id);
     setPregunta(faq.pregunta);
@@ -322,6 +394,13 @@ function App() {
     setHorarioTitulo(horario.titulo);
     setHorarioUrl(horario.url_imagen);
 
+  };
+
+  const editarHorarioDocente = (horario) => {
+    setHorarioDocenteEditandoId(horario.id);
+    setDocenteId(horario.usuario_id);
+    setHorarioDocenteTitulo(horario.titulo);
+    setHorarioDocenteUrl(horario.url_imagen);
   };
 
   return (
@@ -660,6 +739,93 @@ function App() {
                 </button>
 
                 <button onClick={() => eliminarHorario(horario.id)}>
+                  🗑 Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <hr />
+
+      <h2>{horarioDocenteEditandoId ? "Editar Horario Docente" : "Nuevo Horario Docente"}</h2>
+
+      <form onSubmit={guardarHorarioDocente}>
+        <select
+          value={docenteId}
+          onChange={(e) => setDocenteId(e.target.value)}
+          required
+        >
+          <option value="">Seleccione un docente</option>
+
+          {docentes.map((docente) => (
+            <option key={docente.id} value={docente.id}>
+              {docente.nombre}
+            </option>
+          ))}
+        </select>
+
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="Título del horario docente"
+          value={horarioDocenteTitulo}
+          onChange={(e) => setHorarioDocenteTitulo(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="URL de imagen"
+          value={horarioDocenteUrl}
+          onChange={(e) => setHorarioDocenteUrl(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit">
+          {horarioDocenteEditandoId ? "Actualizar Horario Docente" : "Guardar Horario Docente"}
+        </button>
+      </form>
+
+      <hr />
+
+      <h2>Horarios Docentes</h2>
+
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Docente</th>
+            <th>Título</th>
+            <th>URL Imagen</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {horariosDocentes.map((horario) => (
+            <tr key={horario.id}>
+              <td>{horario.id}</td>
+              <td>{horario.docente}</td>
+              <td>{horario.titulo}</td>
+              <td>
+                <a href={horario.url_imagen} target="_blank" rel="noreferrer">
+                  Ver imagen
+                </a>
+              </td>
+              <td>{horario.estado}</td>
+              <td>
+                <button onClick={() => editarHorarioDocente(horario)}>
+                  ✏️ Editar
+                </button>
+
+                <button onClick={() => eliminarHorarioDocente(horario.id)}>
                   🗑 Eliminar
                 </button>
               </td>
