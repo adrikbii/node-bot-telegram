@@ -1,55 +1,28 @@
-const { Markup } = require('telegraf');
 const pool = require('../config/database');
 
 module.exports = (bot) => {
+  bot.action('calendario', async (ctx) => {
+    try {
+      await ctx.answerCbQuery();
 
-    bot.action('calendario', async (ctx) => {
+      const [calendarios] = await pool.query(
+        "SELECT titulo, url_archivo FROM calendario_academico WHERE estado = 'ACTIVO' ORDER BY id DESC LIMIT 1"
+      );
 
-        try {
+      if (calendarios.length === 0) {
+        return ctx.reply('🗓 No hay calendario académico registrado.');
+      }
 
-            await ctx.answerCbQuery();
+      const calendario = calendarios[0];
 
-            const [calendarios] = await pool.query(
-                `
-                SELECT
-                    titulo,
-                    url_archivo
-                FROM calendario_academico
-                WHERE estado = 'ACTIVO'
-                LIMIT 1
-                `
-            );
+      return ctx.reply(
+        `🗓 ${calendario.titulo}\n\n` +
+        `🔗 Ver calendario académico:\n${calendario.url_archivo}`
+      );
 
-            if (calendarios.length === 0) {
-
-                return ctx.reply(
-                    '❌ No existe un calendario académico registrado.'
-                );
-            }
-
-            const calendario = calendarios[0];
-
-            return ctx.reply(
-                `🗓 ${calendario.titulo}`,
-                Markup.inlineKeyboard([
-                    [
-                        Markup.button.url(
-                            '📄 Ver Calendario Académico',
-                            calendario.url_archivo
-                        )
-                    ]
-                ])
-            );
-
-        } catch (error) {
-
-            console.error(error);
-
-            return ctx.reply(
-                '❌ Error al consultar el calendario académico.'
-            );
-        }
-
-    });
-
+    } catch (error) {
+      console.error(error);
+      return ctx.reply('❌ Ocurrió un error al consultar el calendario académico.');
+    }
+  });
 };

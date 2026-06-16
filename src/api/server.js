@@ -8,6 +8,7 @@ const horariosRoutes = require('./routes/horarios.routes');
 const carrerasRoutes = require('./routes/carreras.routes');
 const horariosDocentesRoutes = require('./routes/horariosDocentes.routes');
 const docentesRoutes = require('./routes/docentes.routes');
+const calendarioRoutes = require('./routes/calendario.routes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/horarios', horariosRoutes);
 app.use('/api/carreras', carrerasRoutes);
 app.use('/api/horarios-docentes', horariosDocentesRoutes);
 app.use('/api/docentes', docentesRoutes);
+app.use('/api/calendario', calendarioRoutes);
 
 const PORT = process.env.API_PORT || 3001;
 app.listen(PORT, () => {

@@ -9,6 +9,7 @@ function App() {
   const [carreras, setCarreras] = useState([]);
   const [docentes, setDocentes] = useState([]);
   const [horariosDocentes, setHorariosDocentes] = useState([]);
+  const [calendarios, setCalendarios] = useState([]);
 
   const [pregunta, setPregunta] = useState("");
   const [respuesta, setRespuesta] = useState("");
@@ -36,6 +37,10 @@ function App() {
   const [horarioDocenteUrl, setHorarioDocenteUrl] = useState("");
   const [horarioDocenteEditandoId, setHorarioDocenteEditandoId] = useState(null);
 
+  const [calendarioTitulo, setCalendarioTitulo] = useState("");
+  const [calendarioUrl, setCalendarioUrl] = useState("");
+  const [calendarioEditandoId, setCalendarioEditandoId] = useState(null);
+
   useEffect(() => {
     cargarFaqs();
     cargarInformacion();
@@ -44,6 +49,7 @@ function App() {
     cargarCarreras();
     cargarDocentes();
     cargarHorariosDocentes();
+    cargarCalendarios();
   }, []);
 
   const cargarFaqs = async () => {
@@ -108,6 +114,15 @@ function App() {
     try {
       const respuesta = await axios.get("http://localhost:3001/api/horarios-docentes");
       setHorariosDocentes(respuesta.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const cargarCalendarios = async () => {
+    try {
+      const respuesta = await axios.get("http://localhost:3001/api/calendario");
+      setCalendarios(respuesta.data);
     } catch (error) {
       console.error(error);
     }
@@ -277,6 +292,36 @@ function App() {
     }
   };
 
+  const guardarCalendario = async (e) => {
+    e.preventDefault();
+
+    const datos = {
+      titulo: calendarioTitulo,
+      url_archivo: calendarioUrl,
+      estado: "ACTIVO",
+    };
+
+    try {
+      if (calendarioEditandoId) {
+        await axios.put(
+          `http://localhost:3001/api/calendario/${calendarioEditandoId}`,
+          datos
+        );
+      } else {
+        await axios.post("http://localhost:3001/api/calendario", datos);
+      }
+
+      setCalendarioTitulo("");
+      setCalendarioUrl("");
+      setCalendarioEditandoId(null);
+
+      cargarCalendarios();
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar calendario");
+    }
+  };
+
   const eliminarFaq = async (id) => {
 
     const confirmar = window.confirm(
@@ -366,6 +411,19 @@ function App() {
     }
   };
 
+  const eliminarCalendario = async (id) => {
+    const confirmar = window.confirm("¿Desea eliminar este calendario?");
+    if (!confirmar) return;
+
+    try {
+      await axios.delete(`http://localhost:3001/api/calendario/${id}`);
+      cargarCalendarios();
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar calendario");
+    }
+  };
+
   const editarFaq = (faq) => {
     setEditandoId(faq.id);
     setPregunta(faq.pregunta);
@@ -401,6 +459,12 @@ function App() {
     setDocenteId(horario.usuario_id);
     setHorarioDocenteTitulo(horario.titulo);
     setHorarioDocenteUrl(horario.url_imagen);
+  };
+
+  const editarCalendario = (calendario) => {
+    setCalendarioEditandoId(calendario.id);
+    setCalendarioTitulo(calendario.titulo);
+    setCalendarioUrl(calendario.url_archivo);
   };
 
   return (
@@ -826,6 +890,75 @@ function App() {
                 </button>
 
                 <button onClick={() => eliminarHorarioDocente(horario.id)}>
+                  🗑 Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <hr />
+
+      <h2>{calendarioEditandoId ? "Editar Calendario Académico" : "Nuevo Calendario Académico"}</h2>
+
+      <form onSubmit={guardarCalendario}>
+        <input
+          type="text"
+          placeholder="Título del calendario"
+          value={calendarioTitulo}
+          onChange={(e) => setCalendarioTitulo(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="URL del archivo o imagen"
+          value={calendarioUrl}
+          onChange={(e) => setCalendarioUrl(e.target.value)}
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit">
+          {calendarioEditandoId ? "Actualizar Calendario" : "Guardar Calendario"}
+        </button>
+      </form>
+
+      <hr />
+
+      <h2>Calendario Académico</h2>
+
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Archivo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {calendarios.map((calendario) => (
+            <tr key={calendario.id}>
+              <td>{calendario.id}</td>
+              <td>{calendario.titulo}</td>
+              <td>
+                <a href={calendario.url_archivo} target="_blank" rel="noreferrer">
+                  Ver archivo
+                </a>
+              </td>
+              <td>{calendario.estado}</td>
+              <td>
+                <button onClick={() => editarCalendario(calendario)}>
+                  ✏️ Editar
+                </button>
+
+                <button onClick={() => eliminarCalendario(calendario.id)}>
                   🗑 Eliminar
                 </button>
               </td>
