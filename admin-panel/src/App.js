@@ -5,6 +5,7 @@ function App() {
   const [faqs, setFaqs] = useState([]);
   const [informacion, setInformacion] = useState([]);
   const [contactos, setContactos] = useState([]);
+  const [horarios, setHorarios] = useState([]);
 
   const [pregunta, setPregunta] = useState("");
   const [respuesta, setRespuesta] = useState("");
@@ -22,10 +23,16 @@ function App() {
   const [contactoHorario, setContactoHorario] = useState("");
   const [contactoEditandoId, setContactoEditandoId] = useState(null);
 
+  const [horarioCarreraId, setHorarioCarreraId] = useState("");
+  const [horarioTitulo, setHorarioTitulo] = useState("");
+  const [horarioUrl, setHorarioUrl] = useState("");
+  const [horarioEditandoId, setHorarioEditandoId] = useState(null);
+
   useEffect(() => {
     cargarFaqs();
     cargarInformacion();
     cargarContactos();
+    cargarHorarios();
   }, []);
 
   const cargarFaqs = async () => {
@@ -50,6 +57,19 @@ function App() {
     try {
       const respuesta = await axios.get("http://localhost:3001/api/contactos");
       setContactos(respuesta.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const cargarHorarios = async () => {
+    try {
+      const respuesta = await axios.get(
+        "http://localhost:3001/api/horarios"
+      );
+
+      setHorarios(respuesta.data);
+
     } catch (error) {
       console.error(error);
     }
@@ -146,6 +166,47 @@ function App() {
     }
   };
 
+  const guardarHorario = async (e) => {
+    e.preventDefault();
+
+    try {
+
+      const datos = {
+        carrera_id: horarioCarreraId,
+        titulo: horarioTitulo,
+        url_imagen: horarioUrl,
+        estado: "ACTIVO",
+      };
+
+      if (horarioEditandoId) {
+
+        await axios.put(
+          `http://localhost:3001/api/horarios/${horarioEditandoId}`,
+          datos
+        );
+
+      } else {
+
+        await axios.post(
+          "http://localhost:3001/api/horarios",
+          datos
+        );
+
+      }
+
+      setHorarioCarreraId("");
+      setHorarioTitulo("");
+      setHorarioUrl("");
+      setHorarioEditandoId(null);
+
+      cargarHorarios();
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar horario");
+    }
+  };
+
   const eliminarFaq = async (id) => {
 
     const confirmar = window.confirm(
@@ -199,6 +260,29 @@ function App() {
     }
   };
 
+  const eliminarHorario = async (id) => {
+
+    const confirmar = window.confirm(
+      "¿Desea eliminar este horario?"
+    );
+
+    if (!confirmar) return;
+
+    try {
+
+      await axios.delete(
+        `http://localhost:3001/api/horarios/${id}`
+      );
+
+      cargarHorarios();
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar horario");
+    }
+
+  };
+
   const editarFaq = (faq) => {
     setEditandoId(faq.id);
     setPregunta(faq.pregunta);
@@ -219,6 +303,14 @@ function App() {
     setContactoTelefono(contacto.telefono);
     setContactoCorreo(contacto.correo);
     setContactoHorario(contacto.horario_atencion);
+  };
+
+  const editarHorario = (horario) => {
+    setHorarioEditandoId(horario.id);
+    setHorarioCarreraId(horario.carrera_id);
+    setHorarioTitulo(horario.titulo);
+    setHorarioUrl(horario.url_imagen);
+
   };
 
   return (
@@ -473,6 +565,84 @@ function App() {
                 </button>
 
                 <button onClick={() => eliminarContacto(contacto.id)}>
+                  🗑 Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <hr />
+
+      <h2>{horarioEditandoId ? "Editar Horario" : "Nuevo Horario"}</h2>
+
+      <form onSubmit={guardarHorario}>
+        <input
+          type="number"
+          placeholder="ID de carrera"
+          value={horarioCarreraId}
+          onChange={(e) => setHorarioCarreraId(e.target.value)}
+          required
+        />
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="Título del horario"
+          value={horarioTitulo}
+          onChange={(e) => setHorarioTitulo(e.target.value)}
+          required
+        />
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="URL de la imagen"
+          value={horarioUrl}
+          onChange={(e) => setHorarioUrl(e.target.value)}
+          required
+        />
+        <br /><br />
+
+        <button type="submit">
+          {horarioEditandoId ? "Actualizar Horario" : "Guardar Horario"}
+        </button>
+      </form>
+
+      <hr />
+
+      <h2>Horarios</h2>
+
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Carrera</th>
+            <th>Título</th>
+            <th>URL Imagen</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {horarios.map((horario) => (
+            <tr key={horario.id}>
+              <td>{horario.id}</td>
+              <td>{horario.carrera}</td>
+              <td>{horario.titulo}</td>
+              <td>
+                <a href={horario.url_imagen} target="_blank" rel="noreferrer">
+                  Ver imagen
+                </a>
+              </td>
+              <td>{horario.estado}</td>
+              <td>
+                <button onClick={() => editarHorario(horario)}>
+                  ✏️ Editar
+                </button>
+
+                <button onClick={() => eliminarHorario(horario.id)}>
                   🗑 Eliminar
                 </button>
               </td>
