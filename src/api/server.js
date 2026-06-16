@@ -5,6 +5,7 @@ const faqRoutes = require('./routes/faq.routes');
 const informacionRoutes = require('./routes/informacion.routes');
 const contactosRoutes = require('./routes/contactos.routes');
 const horariosRoutes = require('./routes/horarios.routes');
+const carrerasRoutes = require('./routes/carreras.routes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use('/api/faq', faqRoutes);
 app.use('/api/informacion', informacionRoutes);
 app.use('/api/contactos', contactosRoutes);
 app.use('/api/horarios', horariosRoutes);
+app.use('/api/carreras', carrerasRoutes);
 
 const PORT = process.env.API_PORT || 3001;
 app.listen(PORT, () => {

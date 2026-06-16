@@ -6,6 +6,7 @@ function App() {
   const [informacion, setInformacion] = useState([]);
   const [contactos, setContactos] = useState([]);
   const [horarios, setHorarios] = useState([]);
+  const [carreras, setCarreras] = useState([]);
 
   const [pregunta, setPregunta] = useState("");
   const [respuesta, setRespuesta] = useState("");
@@ -33,6 +34,7 @@ function App() {
     cargarInformacion();
     cargarContactos();
     cargarHorarios();
+    cargarCarreras();
   }, []);
 
   const cargarFaqs = async () => {
@@ -70,6 +72,15 @@ function App() {
 
       setHorarios(respuesta.data);
 
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const cargarCarreras = async () => {
+    try {
+      const respuesta = await axios.get("http://localhost:3001/api/carreras");
+      setCarreras(respuesta.data);
     } catch (error) {
       console.error(error);
     }
@@ -577,13 +588,19 @@ function App() {
       <h2>{horarioEditandoId ? "Editar Horario" : "Nuevo Horario"}</h2>
 
       <form onSubmit={guardarHorario}>
-        <input
-          type="number"
-          placeholder="ID de carrera"
+        <select
           value={horarioCarreraId}
           onChange={(e) => setHorarioCarreraId(e.target.value)}
           required
-        />
+        >
+          <option value="">Seleccione una carrera</option>
+
+          {carreras.map((carrera) => (
+            <option key={carrera.id} value={carrera.id}>
+              {carrera.nombre}
+            </option>
+          ))}
+        </select>
         <br /><br />
 
         <input
