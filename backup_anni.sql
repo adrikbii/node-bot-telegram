@@ -112,7 +112,7 @@ CREATE TABLE `contactos` (
   `estado` enum('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +121,7 @@ CREATE TABLE `contactos` (
 
 LOCK TABLES `contactos` WRITE;
 /*!40000 ALTER TABLE `contactos` DISABLE KEYS */;
-INSERT INTO `contactos` VALUES (1,'Secretaría Académica','Personal administrativo','0999999999','secretaria@inan.edu.ec','Lunes a viernes de 08h00 a 17h00','ACTIVO','2026-06-11 07:59:54'),(2,'Coordinación Académica','Coordinador académico','0988888888','coordinacion@inan.edu.ec','Lunes a viernes de 08h00 a 18h00','ACTIVO','2026-06-11 07:59:54'),(3,'Admisiones','Coordinador de Admisiones','0988776655','admisiones@inan.edu.ec','Lunes a Viernes de 08h00 a 12h00','ACTIVO','2026-06-11 08:21:38');
+INSERT INTO `contactos` VALUES (4,'Secretaría Académica','Personal administrativo','Pendiente','secretaria@tecnologicoinan.edu.ec','Lunes a viernes de 08h00 a 13h00 y de 14h00 a 21h00. Sábados de 07h30 a 13h00 y de 13h00 a 15h30.','ACTIVO','2026-06-16 03:53:29'),(5,'Bienestar Estudiantil','Personal de bienestar','Pendiente','bienestar@tecnologicoinan.edu.ec','Miércoles y viernes de 17h00 a 21h00. Sábados de 09h00 a 13h00.','ACTIVO','2026-06-16 03:54:21'),(6,'Talento Humano','Personal administrativo','Pendiente','talento.humano@tecnologicoinan.edu.ec','Viernes de 08h00 a 16h00. Jueves de 10h00 a 13h00 y de 18h00 a 20h00.','ACTIVO','2026-06-16 03:54:57'),(7,'Contabilidad','Personal contable','Pendiente','contabilidad@tecnologicoinan.edu.ec','Lunes a viernes de 08h30 a 13h00 y de 14h30 a 18h00.','ACTIVO','2026-06-16 03:56:40'),(8,'Vinculación','Personal de vinculación','Pendiente','vinculacion@tecnologicoinan.edu.ec','Martes de 09h00 a 18h00. Miércoles de 15h00 a 18h00. Jueves de 15h00 a 20h00. Viernes de 08h00 a 14h00.','ACTIVO','2026-06-16 03:58:17'),(9,'Titulación','Personal de titulación','Pendiente','titulacion@tecnologicoinan.edu.ec','Horario sujeto a cambios. Atención de lunes a viernes en diferentes franjas horarias entre 08h00 y 20h00.','ACTIVO','2026-06-16 04:02:10'),(10,'Rectorado','Rectorado','Pendiente','rectorado@tecnologicoinan.edu.ec','Pendiente','ACTIVO','2026-06-16 04:02:52'),(11,'Vicerrectorado','Vicerrectorado','Pendiente','vicerrectorado@tecnologicoinan.edu.ec','Pendiente','ACTIVO','2026-06-16 04:03:08'),(12,'Soporte Informático','Área de soporte','Pendiente','soporte@tecnologicoinan.edu.ec','Pendiente','ACTIVO','2026-06-16 04:03:39'),(13,'Biblioteca','Personal de biblioteca','Pendiente','biblioteca@tecnologicoinan.edu.ec','Pendiente','ACTIVO','2026-06-16 04:04:55');
 /*!40000 ALTER TABLE `contactos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -187,6 +187,36 @@ LOCK TABLES `horarios` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `horarios_docentes`
+--
+
+DROP TABLE IF EXISTS `horarios_docentes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `horarios_docentes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL,
+  `titulo` varchar(150) NOT NULL,
+  `url_imagen` text NOT NULL,
+  `estado` enum('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `horarios_docentes_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `horarios_docentes`
+--
+
+LOCK TABLES `horarios_docentes` WRITE;
+/*!40000 ALTER TABLE `horarios_docentes` DISABLE KEYS */;
+INSERT INTO `horarios_docentes` VALUES (1,2,'Horario Docente','https://ejemplo.com/horario_docente.jpg','ACTIVO','2026-06-16 08:15:26');
+/*!40000 ALTER TABLE `horarios_docentes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `horarios_imagenes`
 --
 
@@ -203,7 +233,7 @@ CREATE TABLE `horarios_imagenes` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_horario_carrera` (`carrera_id`),
   CONSTRAINT `horarios_imagenes_ibfk_1` FOREIGN KEY (`carrera_id`) REFERENCES `carreras` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,7 +242,7 @@ CREATE TABLE `horarios_imagenes` (
 
 LOCK TABLES `horarios_imagenes` WRITE;
 /*!40000 ALTER TABLE `horarios_imagenes` DISABLE KEYS */;
-INSERT INTO `horarios_imagenes` VALUES (1,1,'Horario - Desarrollo de Software','https://tecnologicoinan.edu.ec/proyecto/imagenes/horariodessofware.jpg','ACTIVO','2026-06-07 21:26:01');
+INSERT INTO `horarios_imagenes` VALUES (1,2,'Horario - Desarrollo de Software','https://ejemplo.com/horario_ds.jpg','ACTIVO','2026-06-07 21:26:01');
 /*!40000 ALTER TABLE `horarios_imagenes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,6 +377,7 @@ CREATE TABLE `usuarios` (
   `estado` enum('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
   `carrera_id` int DEFAULT NULL,
   `rol_id` int DEFAULT NULL,
+  `horario_url` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `cedula` (`cedula`),
   KEY `fk_usuario_rol` (`rol_id`),
@@ -360,7 +391,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'1234567890','Adminuser','admin123','ADMIN','ACTIVO',NULL,1),(2,'0987654321','Docenteuser','docente123','DOCENTE','ACTIVO',NULL,2),(3,'1122334455','Estudianteuser','estudiante123','ESTUDIANTE','ACTIVO',2,3);
+INSERT INTO `usuarios` VALUES (1,'1234567890','Adminuser','admin123','ADMIN','ACTIVO',NULL,1,NULL),(2,'0987654321','Docenteuser','docente123','DOCENTE','ACTIVO',NULL,2,'https://ejemplo.com/horario_docente.jpg'),(3,'1122334455','Estudianteuser','estudiante123','ESTUDIANTE','ACTIVO',2,3,NULL);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -373,4 +404,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-11  8:32:09
+-- Dump completed on 2026-06-18 20:40:07
