@@ -6,6 +6,7 @@ function menuAdmin() {
         [Markup.button.callback('👥 Gestionar Usuarios', 'admin_usuarios')],
         [Markup.button.callback('📚 Gestionar Mallas', 'admin_mallas')],
         [Markup.button.callback('❓ Gestionar FAQ', 'admin_faq')],
+        [Markup.button.callback('📢 Anuncios', 'anuncios')],
         [Markup.button.callback('🏫 Información Institucional', 'institucion')],
         [Markup.button.callback('🚪 Cerrar Sesión', 'logout')]
     ]);
@@ -13,6 +14,7 @@ function menuAdmin() {
 
 function menuDocente() {
     return Markup.inlineKeyboard([
+        [Markup.button.callback('📢 Anuncios', 'anuncios')],
         [Markup.button.callback('📅 Mis Horarios', 'horarios')],
         [Markup.button.callback('📚 Malla Curricular', 'malla')],
         [Markup.button.callback('🏫 Información Institucional', 'institucion')],
@@ -23,6 +25,7 @@ function menuDocente() {
 
 function menuEstudiante() {
     return Markup.inlineKeyboard([
+        [Markup.button.callback('📢 Anuncios', 'anuncios')],
         [Markup.button.callback('📅 Horarios', 'horarios')],
         [Markup.button.callback('🗓 Calendario', 'calendario')],
         [Markup.button.callback('📚 Mi Malla Curricular', 'malla')],

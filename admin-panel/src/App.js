@@ -10,6 +10,7 @@ function App() {
   const [docentes, setDocentes] = useState([]);
   const [horariosDocentes, setHorariosDocentes] = useState([]);
   const [calendarios, setCalendarios] = useState([]);
+  const [anuncios, setAnuncios] = useState([]);
 
   const [pregunta, setPregunta] = useState("");
   const [respuesta, setRespuesta] = useState("");
@@ -41,6 +42,10 @@ function App() {
   const [calendarioUrl, setCalendarioUrl] = useState("");
   const [calendarioEditandoId, setCalendarioEditandoId] = useState(null);
 
+  const [anuncioTitulo, setAnuncioTitulo] = useState("");
+  const [anuncioContenido, setAnuncioContenido] = useState("");
+  const [anuncioEditandoId, setAnuncioEditandoId] = useState(null);
+
   useEffect(() => {
     cargarFaqs();
     cargarInformacion();
@@ -50,6 +55,7 @@ function App() {
     cargarDocentes();
     cargarHorariosDocentes();
     cargarCalendarios();
+    cargarAnuncios();
   }, []);
 
   const cargarFaqs = async () => {
@@ -123,6 +129,20 @@ function App() {
     try {
       const respuesta = await axios.get("http://localhost:3001/api/calendario");
       setCalendarios(respuesta.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const cargarAnuncios = async () => {
+    try {
+
+      const respuesta = await axios.get(
+        "http://localhost:3001/api/anuncios"
+      );
+
+      setAnuncios(respuesta.data);
+
     } catch (error) {
       console.error(error);
     }
@@ -322,6 +342,45 @@ function App() {
     }
   };
 
+  const guardarAnuncio = async (e) => {
+    e.preventDefault();
+
+    const datos = {
+      titulo: anuncioTitulo,
+      contenido: anuncioContenido,
+      estado: "ACTIVO"
+    };
+
+    try {
+
+      if (anuncioEditandoId) {
+
+        await axios.put(
+          `http://localhost:3001/api/anuncios/${anuncioEditandoId}`,
+          datos
+        );
+
+      } else {
+
+        await axios.post(
+          "http://localhost:3001/api/anuncios",
+          datos
+        );
+
+      }
+
+      setAnuncioTitulo("");
+      setAnuncioContenido("");
+      setAnuncioEditandoId(null);
+
+      cargarAnuncios();
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar anuncio");
+    }
+  };
+
   const eliminarFaq = async (id) => {
 
     const confirmar = window.confirm(
@@ -424,6 +483,29 @@ function App() {
     }
   };
 
+  const eliminarAnuncio = async (id) => {
+
+    const confirmar = window.confirm(
+      "¿Desea eliminar este anuncio?"
+    );
+
+    if (!confirmar) return;
+
+    try {
+
+      await axios.delete(
+        `http://localhost:3001/api/anuncios/${id}`
+      );
+
+      cargarAnuncios();
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar anuncio");
+    }
+
+  };
+
   const editarFaq = (faq) => {
     setEditandoId(faq.id);
     setPregunta(faq.pregunta);
@@ -465,6 +547,14 @@ function App() {
     setCalendarioEditandoId(calendario.id);
     setCalendarioTitulo(calendario.titulo);
     setCalendarioUrl(calendario.url_archivo);
+  };
+
+  const editarAnuncio = (anuncio) => {
+
+    setAnuncioEditandoId(anuncio.id);
+    setAnuncioTitulo(anuncio.titulo);
+    setAnuncioContenido(anuncio.contenido);
+
   };
 
   return (
@@ -965,6 +1055,102 @@ function App() {
             </tr>
           ))}
         </tbody>
+      </table>
+
+      <hr />
+
+      <h2>
+        {anuncioEditandoId
+          ? "Editar Anuncio"
+          : "Nuevo Anuncio"}
+      </h2>
+
+      <form onSubmit={guardarAnuncio}>
+
+        <input
+          type="text"
+          placeholder="Título"
+          value={anuncioTitulo}
+          onChange={(e) =>
+            setAnuncioTitulo(e.target.value)
+          }
+          required
+        />
+
+        <br /><br />
+
+        <textarea
+          placeholder="Contenido"
+          value={anuncioContenido}
+          onChange={(e) =>
+            setAnuncioContenido(e.target.value)
+          }
+          required
+        />
+
+        <br /><br />
+
+        <button type="submit">
+          {anuncioEditandoId
+            ? "Actualizar Anuncio"
+            : "Guardar Anuncio"}
+        </button>
+
+      </form>
+
+      <hr />
+
+      <h2>Anuncios</h2>
+
+      <table border="1" cellPadding="10">
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Contenido</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {anuncios.map((anuncio) => (
+
+            <tr key={anuncio.id}>
+
+              <td>{anuncio.id}</td>
+              <td>{anuncio.titulo}</td>
+              <td>{anuncio.contenido}</td>
+              <td>{anuncio.estado}</td>
+
+              <td>
+
+                <button
+                  onClick={() =>
+                    editarAnuncio(anuncio)
+                  }
+                >
+                  ✏️ Editar
+                </button>
+
+                <button
+                  onClick={() =>
+                    eliminarAnuncio(anuncio.id)
+                  }
+                >
+                  🗑 Eliminar
+                </button>
+
+              </td>
+
+            </tr>
+
+          ))}
+
+        </tbody>
+
       </table>
     </div>
   );

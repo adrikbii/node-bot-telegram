@@ -52,6 +52,7 @@ require('./actions/malla')(bot);
 require('./actions/institucion')(bot);
 require('./actions/faq')(bot);
 require('./actions/contactos')(bot);
+require('./actions/anuncios')(bot);
 
 // START BOT
 bot.launch();

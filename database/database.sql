@@ -174,3 +174,11 @@ ADD UNIQUE (nombre);
 
 ALTER TABLE materias
 ADD UNIQUE (carrera_id, ciclo_id, nombre);
+
+CREATE TABLE anuncios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    contenido TEXT NOT NULL,
+    estado ENUM('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
