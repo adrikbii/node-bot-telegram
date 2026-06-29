@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 
+const usuariosRoutes = require('./routes/usuarios.routes');
+const mallasRoutes = require('./routes/mallas.routes');
+const ciclosRoutes = require('./routes/ciclos.routes');
 const faqRoutes = require('./routes/faq.routes');
 const informacionRoutes = require('./routes/informacion.routes');
 const contactosRoutes = require('./routes/contactos.routes');
@@ -16,6 +19,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/mallas', mallasRoutes);
+app.use('/api/ciclos', ciclosRoutes);
 app.use('/api/faq', faqRoutes);
 app.use('/api/informacion', informacionRoutes);
 app.use('/api/contactos', contactosRoutes);
